@@ -1,0 +1,51 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+.env.*
+
+# macOS-specific files
+.DS_Store
+
+# IDEs, agent metadata & local scratch
+.idea/
+.vscode/
+.venv/
+.codex/
+.gemini/
+.impeccable/
+.agents/
+scratch/
+__pycache__/
+
+# Non-hosting files (tests, PDF, scripts, tasks, specs)
+*.pdf
+scripts/
+tests/
+tasks/
+spec.md
+project.md
+playwright.config.ts
+extract_json.py
+merge.py
+split_geojson.py
+sample.ipynb
+recategorize.py
+test-console.cjs
+test-console.js
+
+# test reports
+playwright-report/
+test-results/

@@ -1,0 +1,49 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Makkah",
+        "type": "city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [39.8256, 21.4266]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Madinah",
+        "type": "city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [39.6100, 24.4700]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ta'if",
+        "type": "city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [40.41583, 21.27028]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Khaybar",
+        "type": "city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [39.29306, 25.70577]
+      }
+    }
+  ]
+}

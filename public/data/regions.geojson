@@ -1,0 +1,25 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "H I J A Z" },
+      "geometry": { "type": "Point", "coordinates": [39.0, 23.5] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "N A J D" },
+      "geometry": { "type": "Point", "coordinates": [44.0, 24.5] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Y E M E N" },
+      "geometry": { "type": "Point", "coordinates": [45.5, 15.5] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "S Y R I A" },
+      "geometry": { "type": "Point", "coordinates": [37.5, 33.0] }
+    }
+  ]
+}

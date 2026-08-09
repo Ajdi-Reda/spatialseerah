@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "@fontsource/merriweather";
+@import "@fontsource/inter";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Merriweather', serif;
+
+  --color-parchment-100: #F7F4EB;
+  --color-parchment-200: #E8E2D2;
+  --color-ink-700: #2C2621;
+  --color-ink-900: #1A1C20;
+  
+  --color-marker-battles: #9C2A2A;
+  --color-marker-treaties: #2A5A4A;
+  --color-marker-migrations: #B8860B;
+  --color-marker-biography: #4A3E3D;
+  --color-marker-preaching: #0D9488;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-parchment-100 text-ink-900;
+  }
+}
