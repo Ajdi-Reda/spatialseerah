@@ -11,6 +11,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
     optimizeDeps: {
       exclude: ['maplibre-gl']
+    },
+    ssr: {
+      noExternal: ['maplibre-gl']
     }
   }
 });

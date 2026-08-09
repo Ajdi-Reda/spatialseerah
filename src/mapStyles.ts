@@ -25,7 +25,7 @@ export const clusterCountLayerStyle: LayerProps = {
   filter: ['has', 'point_count'],
   layout: {
     'text-field': '{point_count_abbreviated}',
-    'text-font': ['Open Sans Bold'],
+    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
     'text-size': 13,
     'text-allow-overlap': true,
     'text-ignore-placement': true
@@ -62,7 +62,7 @@ export const unclusteredLabelLayerStyle: LayerProps = {
   filter: ['!', ['has', 'point_count']],
   layout: {
     'text-field': ['get', 'title'],
-    'text-font': ['Open Sans Bold'],
+    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
     'text-size': 12,
     'text-anchor': 'left',
     'text-offset': [1.2, 0],
@@ -84,7 +84,7 @@ export const citiesLayerStyle: LayerProps = {
   type: 'symbol',
   layout: {
     'text-field': ['get', 'name'],
-    'text-font': ['Open Sans Bold'],
+    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
     'text-size': 13,
     'text-transform': 'uppercase',
     'text-letter-spacing': 0.15,
@@ -113,7 +113,7 @@ export const citiesLayerStyle: LayerProps = {
 
 export const parchmentStyle = {
   version: 8,
-  glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+  glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
   sources: {
     'landmass': {
       type: 'geojson',
@@ -184,7 +184,7 @@ export const parchmentStyle = {
       source: 'regions',
       layout: {
         'text-field': ['get', 'name'],
-        'text-font': ['Open Sans Bold'],
+        'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
         'text-size': [
           'interpolate', ['linear'], ['zoom'],
           4, 16,
