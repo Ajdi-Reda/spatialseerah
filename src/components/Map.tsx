@@ -10,7 +10,13 @@ import {
   citiesLayerStyle,
   parchmentStyle 
 } from '../mapStyles';
+import { setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
+
+if (typeof window !== 'undefined') {
+  setWorkerUrl(workerUrl);
+}
 
 type Category = 'battles' | 'treaties' | 'migrations' | 'biography' | 'preaching';
 

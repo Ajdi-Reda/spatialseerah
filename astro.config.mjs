@@ -9,6 +9,9 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      target: 'es2022'
+    },
     optimizeDeps: {
       exclude: ['maplibre-gl']
     },
