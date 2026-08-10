@@ -75,21 +75,21 @@ export default function Timeline({
       }`}
     >
       {/* Header & Language Toggle */}
-      <div className="flex-none flex items-start justify-between gap-2">
-        <div>
-          <h1 className={`font-serif text-xl sm:text-2xl font-bold tracking-wide text-ink-900 leading-tight drop-shadow-sm ${isRTL ? 'font-arabic' : ''}`}>
+      <div className="flex-none flex items-center justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <h1 className={`font-serif text-lg sm:text-2xl font-bold tracking-wide text-ink-900 leading-tight truncate whitespace-nowrap drop-shadow-sm ${isRTL ? 'font-arabic' : ''}`}>
             {t.appTitle}
           </h1>
-          <p className={`font-sans text-[11px] sm:text-xs text-ink-700 font-medium ${isRTL ? 'font-arabic' : ''}`}>
+          <p className={`hidden sm:block font-sans text-[11px] sm:text-xs text-ink-700 font-medium ${isRTL ? 'font-arabic' : ''}`}>
             {t.appSubtitle}
           </p>
         </div>
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 shrink-0">
           <a 
             href="/contact" 
             aria-label={isRTL ? "الإبلاغ عن خطأ / التواصل" : "Report a mistake / Contact"}
             title={isRTL ? "الإبلاغ عن خطأ / التواصل" : "Report a mistake / Contact"}
-            className="p-1.5 rounded-lg border border-ink-900/15 bg-parchment-100/90 text-ink-700 hover:text-ink-900 hover:bg-ink-900/10 transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
+            className="p-1 sm:p-1.5 rounded-lg border border-ink-900/15 bg-parchment-100/90 text-ink-700 hover:text-ink-900 hover:bg-ink-900/10 transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900 shrink-0"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -98,10 +98,10 @@ export default function Timeline({
           <LanguageToggle />
           <button
             onClick={() => setIsMobileExpanded(!isMobileExpanded)}
-            className="sm:hidden text-xs font-bold px-3 py-1.5 rounded-full bg-ink-900 text-parchment-100 flex items-center gap-1 shadow-sm"
+            className="sm:hidden text-xs font-bold px-2.5 py-1 rounded-full bg-ink-900 text-parchment-100 flex items-center gap-1 shadow-sm shrink-0 whitespace-nowrap"
             aria-label={isMobileExpanded ? t.collapseEvents : t.expandEvents}
           >
-            <span>{isMobileExpanded ? t.collapseEvents : `${t.expandEvents} (${filteredEvents.length})`}</span>
+            <span>{isMobileExpanded ? (isRTL ? '▼ خريطة' : '▼ Map') : (isRTL ? `▲ الأحداث (${filteredEvents.length})` : `▲ Events (${filteredEvents.length})`)}</span>
           </button>
         </div>
       </div>
