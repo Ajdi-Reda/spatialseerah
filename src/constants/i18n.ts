@@ -1,5 +1,21 @@
 export type Language = 'en' | 'ar';
 
+export interface MilestoneAnchor {
+  year: number;
+  label: string;
+  label_ar: string;
+}
+
+export const SEERAH_MILESTONES: MilestoneAnchor[] = [
+  { year: 610, label: 'Revelation', label_ar: 'الوحي' },
+  { year: 615, label: 'Abyssinia', label_ar: 'الحبشة' },
+  { year: 622, label: 'Hijrah', label_ar: 'الهجرة' },
+  { year: 624, label: 'Badr', label_ar: 'بدر' },
+  { year: 628, label: 'Hudaybiyyah', label_ar: 'الحديبية' },
+  { year: 630, label: 'Makkah', label_ar: 'فتح مكة' },
+  { year: 632, label: 'Farewell', label_ar: 'حجة الوداع' }
+];
+
 export interface TranslationStrings {
   appTitle: string;
   appSubtitle: string;
@@ -22,6 +38,12 @@ export interface TranslationStrings {
   closeDrawer: string;
   toggleLanguage: string;
   selectLanguage: string;
+  meccanPeriod: string;
+  medinanPeriod: string;
+  resetFilters: string;
+  selectAll: string;
+  clearAll: string;
+  milestonesTitle: string;
 }
 
 export const UI_STRINGS: Record<Language, TranslationStrings> = {
@@ -46,7 +68,13 @@ export const UI_STRINGS: Record<Language, TranslationStrings> = {
     mapView: 'Map View',
     closeDrawer: 'Close event detail drawer',
     toggleLanguage: 'Language',
-    selectLanguage: 'Switch to Arabic'
+    selectLanguage: 'Switch to Arabic',
+    meccanPeriod: 'Meccan Era (610–622 CE)',
+    medinanPeriod: 'Medinan Era (622–632 CE)',
+    resetFilters: 'Reset All Filters',
+    selectAll: 'Select All',
+    clearAll: 'Clear All',
+    milestonesTitle: 'Key Milestones'
   },
   ar: {
     appTitle: 'السيرة المكانية',
@@ -69,9 +97,25 @@ export const UI_STRINGS: Record<Language, TranslationStrings> = {
     mapView: 'عرض الخريطة',
     closeDrawer: 'إغلاق تفاصيل الحدث',
     toggleLanguage: 'اللغة',
-    selectLanguage: 'التحويل إلى الإنجليزية'
+    selectLanguage: 'التحويل إلى الإنجليزية',
+    meccanPeriod: 'العهد المكي (610–622 م)',
+    medinanPeriod: 'العهد المدني (622–632 م)',
+    resetFilters: 'إعادة ضبط التصنيفات',
+    selectAll: 'تحديد الكل',
+    clearAll: 'إلغاء الكل',
+    milestonesTitle: 'محطات بارزة'
   }
 };
+
+export function getHijriYearLabel(ceYear: number, isRTL: boolean): string {
+  if (ceYear < 622) {
+    const bh = 623 - ceYear;
+    return isRTL ? `${bh} ق.هـ` : `${bh} BH`;
+  } else {
+    const ah = ceYear - 621;
+    return isRTL ? `${ah} هـ` : `${ah} AH`;
+  }
+}
 
 export function cleanArabicTypography(text: string): string {
   if (!text) return '';
