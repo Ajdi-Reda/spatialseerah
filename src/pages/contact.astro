@@ -1,0 +1,254 @@
+---
+import '../styles/global.css';
+
+const canonicalUrl = "https://spatialseerah.com/contact";
+const siteTitle = "Report a Mistake & Contact | Spatial Seerah (السيرة المكانية)";
+const siteDescription = "Found a geographical or historical mistake in Spatial Seerah? Contact us at redaajdi6@gmail.com to submit corrections and suggestions.";
+
+const schemaMarkup = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Spatial Seerah Contact & Feedback",
+  "url": canonicalUrl,
+  "description": siteDescription,
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Reda Ajdi",
+    "email": "redaajdi6@gmail.com"
+  }
+};
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{siteTitle}</title>
+
+		<!-- SEO Metadata -->
+		<meta name="description" content={siteDescription} />
+		<link rel="canonical" href={canonicalUrl} />
+
+		<!-- Open Graph -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Spatial Seerah" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content="Report a Mistake | Spatial Seerah" />
+		<meta property="og:description" content={siteDescription} />
+		<meta property="og:image" content="https://spatialseerah.com/og-cover.png" />
+
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet">
+
+		<!-- Schema.org JSON-LD -->
+		<script type="application/ld+json" set:html={JSON.stringify(schemaMarkup)} />
+	</head>
+	<body class="min-h-screen bg-parchment-100 text-ink-900 font-sans antialiased selection:bg-amber-600/20 selection:text-ink-900 relative">
+		<!-- Background Texture Grid -->
+		<div class="fixed inset-0 bg-parchment-200/40 pointer-events-none -z-10" />
+
+		<!-- Header Nav -->
+		<header class="w-full border-b border-ink-900/10 bg-parchment-100/90 backdrop-blur-md sticky top-0 z-30">
+			<div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+				<a href="/" class="flex items-center gap-2 group">
+					<span class="font-serif text-lg sm:text-xl font-bold tracking-wide text-ink-900 group-hover:text-marker-treaties transition-colors">
+						Spatial Seerah
+					</span>
+					<span class="font-arabic text-sm text-ink-700 font-bold hidden xs:inline">
+						| السيرة المكانية
+					</span>
+				</a>
+
+				<a 
+					href="/" 
+					class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-ink-900 bg-ink-900/5 hover:bg-ink-900/10 border border-ink-900/15 px-3.5 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
+				>
+					<svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+					</svg>
+					<span>Return to Map</span>
+				</a>
+			</div>
+		</header>
+
+		<!-- Main Contact Content -->
+		<main class="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+			<article class="bg-parchment-100/95 backdrop-blur-md rounded-2xl border border-ink-900/15 p-6 sm:p-10 shadow-xl space-y-8">
+				
+				<!-- Heading Section -->
+				<header class="space-y-3 border-b border-ink-900/10 pb-6">
+					<div class="flex items-center justify-between gap-4">
+						<h1 class="font-serif text-2xl sm:text-3xl font-bold tracking-wide text-ink-900 leading-tight">
+							Report a Mistake
+						</h1>
+						<span class="font-arabic text-xl text-ink-700 font-bold" dir="rtl">
+							الإبلاغ عن خطأ
+						</span>
+					</div>
+					<p class="text-sm text-ink-700 leading-relaxed">
+						We strive for absolute temporal and geographical precision in mapping the life of Prophet Muhammad (ﷺ). If you spot any error, coordinate offset, or historical discrepancy, please report it below.
+					</p>
+					<p class="font-arabic text-sm text-ink-700 leading-relaxed text-right" dir="rtl">
+						نسعى لتحقيق أقصى درجات الدقة الجغرافية والتاريخية في توثيق أحداث السيرة النبوية الشريفة. إذا لاحظت أي خطأ أو إحداثيات غير دقيقة، يسعدنا جداً تواصلك معنا لإصلاحه.
+					</p>
+				</header>
+
+				<!-- Highlight Direct Email Card -->
+				<section class="bg-amber-500/10 border border-amber-600/30 rounded-xl p-5 sm:p-6 space-y-4">
+					<div class="flex items-start gap-3">
+						<div class="p-2.5 bg-amber-600/15 text-amber-900 rounded-lg flex-none mt-0.5">
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<div class="space-y-1 flex-1">
+							<h2 class="font-serif font-bold text-ink-900 text-base sm:text-lg">
+								Direct Email Contact
+							</h2>
+							<p class="text-xs sm:text-sm text-ink-700">
+								Send your feedback directly to the maintainer:
+							</p>
+							<div class="pt-2 flex flex-wrap items-center gap-3">
+								<a 
+									href="mailto:redaajdi6@gmail.com?subject=%5BSpatial%20Seerah%5D%20Mistake%20Report" 
+									class="font-mono text-sm sm:text-base font-bold text-marker-treaties hover:underline bg-parchment-100 px-3 py-1.5 rounded border border-ink-900/15 inline-flex items-center gap-2"
+								>
+									<span>redaajdi6@gmail.com</span>
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+									</svg>
+								</a>
+
+								<button
+									id="copy-email-btn"
+									type="button"
+									class="text-xs font-bold text-ink-900 bg-ink-900/10 hover:bg-ink-900/15 px-3 py-2 rounded transition-colors flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
+								>
+									<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+									</svg>
+									<span id="copy-btn-text">Copy Email</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Form Section -->
+				<section class="space-y-4 pt-2">
+					<h2 class="font-serif font-bold text-ink-900 text-lg sm:text-xl">
+						Submit a Correction Form
+					</h2>
+
+					<form id="contact-form" class="space-y-4">
+						<div>
+							<label for="issue-type" class="block text-xs font-bold text-ink-900 uppercase tracking-wider mb-1.5">
+								Issue Category
+							</label>
+							<select 
+								id="issue-type" 
+								name="issueType"
+								class="w-full bg-parchment-100 border border-ink-900/20 rounded-lg px-3.5 py-2.5 text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-ink-900 font-medium"
+							>
+								<option value="Geographical Coordinates Discrepancy">Geographical Coordinates Discrepancy (إحداثيات الخريطة)</option>
+								<option value="Event Date or Timeline Year Error">Event Date or Timeline Year Error (التاريخ أو السنة)</option>
+								<option value="Textual Typo or Description Discrepancy">Textual Typo or Description Discrepancy (خطأ نصي أو إملائي)</option>
+								<option value="General Feedback or Suggestion">General Feedback or Suggestion (اقتراح عام)</option>
+							</select>
+						</div>
+
+						<div>
+							<label for="event-title" class="block text-xs font-bold text-ink-900 uppercase tracking-wider mb-1.5">
+								Event Title / Year (Optional)
+							</label>
+							<input 
+								type="text" 
+								id="event-title" 
+								name="eventTitle"
+								placeholder="e.g. Battle of Uhud (625 CE) / غزوة أحد"
+								class="w-full bg-parchment-100 border border-ink-900/20 rounded-lg px-3.5 py-2.5 text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-ink-900 placeholder:text-ink-700/50"
+							/>
+						</div>
+
+						<div>
+							<label for="message" class="block text-xs font-bold text-ink-900 uppercase tracking-wider mb-1.5">
+								Description of Mistake & Correction
+							</label>
+							<textarea 
+								id="message" 
+								name="message"
+								rows="5" 
+								required
+								placeholder="Please describe the mistake and provide correct details or historical reference..."
+								class="w-full bg-parchment-100 border border-ink-900/20 rounded-lg px-3.5 py-2.5 text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-ink-900 placeholder:text-ink-700/50"
+							></textarea>
+						</div>
+
+						<button 
+							type="submit"
+							class="w-full bg-ink-900 hover:bg-ink-900/90 text-parchment-100 font-serif font-bold text-sm py-3 px-6 rounded-lg transition-colors shadow-md flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink-900"
+						>
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+							</svg>
+							<span>Send Report via Email Client</span>
+						</button>
+					</form>
+				</section>
+
+				<!-- Source Reference Footer -->
+				<footer class="pt-4 border-t border-ink-900/10 text-xs text-ink-700 space-y-1">
+					<p>
+						<strong>Primary Source:</strong> <em>The Sealed Nectar (Ar-Raheeq Al-Makhtum)</em> by Sheikh Safiur-Rahman Mubarakpuri.
+					</p>
+					<p>
+						All submitted reports will be verified against authentic historical references before updating the spatial GeoJSON timeline.
+					</p>
+				</footer>
+			</article>
+		</main>
+
+		<!-- Copy script -->
+		<script>
+			const copyBtn = document.getElementById('copy-email-btn');
+			const copyText = document.getElementById('copy-btn-text');
+			const email = 'redaajdi6@gmail.com';
+
+			if (copyBtn && copyText) {
+				copyBtn.addEventListener('click', () => {
+					navigator.clipboard.writeText(email).then(() => {
+						copyText.textContent = 'Copied!';
+						setTimeout(() => {
+							copyText.textContent = 'Copy Email';
+						}, 2000);
+					}).catch(err => {
+						console.error('Failed to copy: ', err);
+					});
+				});
+			}
+
+			// Handle form submit by opening prefilled mailto
+			const form = document.getElementById('contact-form') as HTMLFormElement | null;
+			if (form) {
+				form.addEventListener('submit', (e) => {
+					e.preventDefault();
+					const issueType = (document.getElementById('issue-type') as HTMLSelectElement)?.value || 'Report';
+					const eventTitle = (document.getElementById('event-title') as HTMLInputElement)?.value || 'N/A';
+					const message = (document.getElementById('message') as HTMLTextAreaElement)?.value || '';
+
+					const subject = encodeURIComponent(`[Spatial Seerah Report] ${issueType}`);
+					const body = encodeURIComponent(
+						`Issue Category: ${issueType}\nEvent/Year: ${eventTitle}\n\nDescription of Mistake:\n${message}\n\n---\nSent from Spatial Seerah Report Form`
+					);
+
+					window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+				});
+			}
+		</script>
+	</body>
+</html>

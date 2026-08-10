@@ -84,7 +84,17 @@ export default function Timeline({
             {t.appSubtitle}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <a 
+            href="/contact" 
+            aria-label={isRTL ? "الإبلاغ عن خطأ / التواصل" : "Report a mistake / Contact"}
+            title={isRTL ? "الإبلاغ عن خطأ / التواصل" : "Report a mistake / Contact"}
+            className="p-1.5 rounded-lg border border-ink-900/15 bg-parchment-100/90 text-ink-700 hover:text-ink-900 hover:bg-ink-900/10 transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </a>
           <LanguageToggle />
           <button
             onClick={() => setIsMobileExpanded(!isMobileExpanded)}
