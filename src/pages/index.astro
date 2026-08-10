@@ -1,6 +1,75 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import '../styles/global.css';
 import Map from '../components/Map';
+
+// Read static GeoJSON dataset during build for SSR static SEO fallback
+const geojsonPath = path.join(process.cwd(), 'public', 'data', 'seerah_timeline.geojson');
+let events: any[] = [];
+try {
+  const fileData = fs.readFileSync(geojsonPath, 'utf8');
+  const parsed = JSON.parse(fileData);
+  events = parsed.features || [];
+} catch (e) {
+  console.error('Failed to load GeoJSON for static SSR SEO fallback:', e);
+}
+
+const canonicalUrl = "https://spatialseerah.com/";
+const siteTitle = "Spatial Seerah | Interactive Map of the Life of Prophet Muhammad (ﷺ)";
+const siteDescription = "Explore an interactive historical timeline and spatial map of the Seerah (life of Prophet Muhammad ﷺ). Discover key events, battles, migrations, and treaties from 610 CE to 632 CE without modern political borders.";
+
+const schemaMarkup = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://spatialseerah.com/#webapp",
+      "url": canonicalUrl,
+      "name": "Spatial Seerah",
+      "alternateName": "السيرة المكانية",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "description": siteDescription,
+      "inLanguage": ["en", "ar"]
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://spatialseerah.com/#dataset",
+      "name": "Seerah Historical Spatial Timeline Dataset",
+      "description": "Geocoded spatial and temporal events covering 610 CE to 632 CE of the Seerah.",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "distribution": {
+        "@type": "DataDownload",
+        "encodingFormat": "application/geo+json",
+        "contentUrl": "https://spatialseerah.com/data/seerah_timeline.geojson"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://spatialseerah.com/#events",
+      "name": "Seerah Timeline Historical Events",
+      "itemListElement": events.slice(0, 50).map((feature, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "item": {
+          "@type": "Event",
+          "name": feature.properties.title || `Seerah Event ${feature.properties.year}`,
+          "startDate": `${feature.properties.year}`,
+          "description": (feature.properties.description || '').slice(0, 300),
+          "location": {
+            "@type": "Place",
+            "geo": {
+              "@type": "GeoCoordinates",
+              "longitude": feature.geometry?.coordinates?.[0],
+              "latitude": feature.geometry?.coordinates?.[1]
+            }
+          }
+        }
+      }))
+    }
+  ]
+};
 ---
 
 <html lang="en">
@@ -8,14 +77,63 @@ import Map from '../components/Map';
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Spatial Seerah | السيرة المكانية</title>
+		<title>{siteTitle}</title>
+
+		<!-- SEO Metadata -->
+		<meta name="description" content={siteDescription} />
+		<link rel="canonical" href={canonicalUrl} />
+		<link rel="alternate" hreflang="en" href={canonicalUrl} />
+		<link rel="alternate" hreflang="ar" href={canonicalUrl} />
+		<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+		<!-- Open Graph / Social Media -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Spatial Seerah" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content="Spatial Seerah | Interactive Historical Map" />
+		<meta property="og:description" content={siteDescription} />
+		<meta property="og:image" content="https://spatialseerah.com/og-cover.png" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:locale:alternate" content="ar_SA" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalUrl} />
+		<meta name="twitter:title" content="Spatial Seerah | Interactive Historical Map" />
+		<meta name="twitter:description" content={siteDescription} />
+		<meta name="twitter:image" content="https://spatialseerah.com/og-cover.png" />
+
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet">
+
+		<!-- JSON-LD Structured Data -->
+		<script type="application/ld+json" set:html={JSON.stringify(schemaMarkup)} />
 	</head>
 	<body class="min-h-screen bg-parchment-100 text-ink-900 overflow-hidden relative">
+		<!-- Static SEO & Accessibility Fallback for Search Engine Crawlers -->
+		<section id="static-seerah-timeline" class="sr-only">
+			<h1>Spatial Seerah | السيرة المكانية</h1>
+			<p>{siteDescription}</p>
+			<h2>Historical Timeline of Events (610 CE – 632 CE)</h2>
+			<ol>
+				{events.map((feature: any) => (
+					<li>
+						<h3>
+							{feature.properties.title} {feature.properties.title_ar ? `(${feature.properties.title_ar})` : ''} - Year {feature.properties.year} CE
+						</h3>
+						<p><strong>Category:</strong> {feature.properties.category}</p>
+						{feature.geometry?.coordinates && (
+							<p><strong>Coordinates:</strong> Lat {feature.geometry.coordinates[1]}, Lng {feature.geometry.coordinates[0]}</p>
+						)}
+						<p>{feature.properties.description}</p>
+					</li>
+				))}
+			</ol>
+		</section>
+
 		<!-- Map Background -->
 		<Map client:only="react" />
 	</body>
