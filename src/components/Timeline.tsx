@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { CATEGORIES_LIST, CategoryMap, type Category } from '../constants/categories';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageToggle from './LanguageToggle';
@@ -10,6 +10,7 @@ interface TimelineProps {
   toggleCategory: (category: Category) => void;
   events: any[];
   onEventClick: (lng: number, lat: number, properties?: any) => void;
+  selectedEventId?: string | number | null;
 }
 
 export default function Timeline({ 
@@ -18,11 +19,13 @@ export default function Timeline({
   activeCategories, 
   toggleCategory, 
   events, 
-  onEventClick 
+  onEventClick,
+  selectedEventId
 }: TimelineProps) {
   const { isRTL, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const activeCardRef = useRef<HTMLDivElement | null>(null);
 
   // Keyboard navigation: Left/Right arrow keys scrub years
   useEffect(() => {
@@ -40,6 +43,13 @@ export default function Timeline({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentYear, setCurrentYear]);
+
+  // Scroll active card into view when selected
+  useEffect(() => {
+    if (selectedEventId && activeCardRef.current) {
+      activeCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedEventId]);
 
   const filteredEvents = useMemo(() => {
     if (!searchQuery.trim()) return events;
@@ -194,6 +204,7 @@ export default function Timeline({
             </p>
           ) : (
             filteredEvents.map(event => {
+              const isSelected = selectedEventId === event.properties.id;
               const catInfo = CategoryMap[event.properties.category as Category];
               const catColorClass = catInfo ? catInfo.colorClass : 'bg-ink-700';
               const catLabel = catInfo ? (isRTL ? catInfo.label_ar : catInfo.label) : event.properties.category;
@@ -203,6 +214,7 @@ export default function Timeline({
               return (
                 <div 
                   key={event.properties.id}
+                  ref={isSelected ? activeCardRef : null}
                   role="button"
                   tabIndex={0}
                   onClick={() => {
@@ -220,7 +232,11 @@ export default function Timeline({
                       }
                     }
                   }}
-                  className="text-start p-2.5 sm:p-3 rounded-lg border border-ink-900/10 hover:border-ink-900/30 hover:bg-ink-900/5 transition-all group shadow-sm bg-parchment-100/90 flex flex-col gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
+                  className={`text-start p-2.5 sm:p-3 rounded-lg border transition-all group shadow-sm flex flex-col gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900 ${
+                    isSelected
+                      ? 'border-amber-600/80 bg-amber-500/10 ring-2 ring-amber-600/60 shadow-md'
+                      : 'border-ink-900/10 bg-parchment-100/90 hover:border-ink-900/30 hover:bg-ink-900/5'
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
@@ -233,7 +249,7 @@ export default function Timeline({
                       {event.properties.year} {t.yearSuffix}
                     </span>
                   </div>
-                  <h3 className={`font-serif font-bold text-ink-900 text-xs sm:text-sm group-hover:text-marker-treaties transition-colors leading-snug ${isRTL ? 'font-arabic text-base' : ''}`}>
+                  <h3 className={`font-serif font-bold text-ink-900 text-xs sm:text-sm group-hover:text-marker-treaties transition-colors leading-snug ${isRTL ? 'font-arabic text-base' : ''} ${isSelected ? 'text-amber-900' : ''}`}>
                     {title}
                   </h3>
                   <p className={`text-[11px] sm:text-xs text-ink-700 line-clamp-2 leading-relaxed ${isRTL ? 'font-arabic text-sm' : ''}`}>

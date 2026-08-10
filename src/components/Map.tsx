@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
+import Map, { Source, Layer, Marker, type MapRef } from 'react-map-gl/maplibre';
 import Timeline from './Timeline';
 import EventDetailDrawer, { type SelectedEventData } from './EventDetailDrawer';
 import { LanguageProvider, useLanguage } from '../context/LanguageContext';
@@ -8,6 +8,9 @@ import {
   clusterCountLayerStyle, 
   unclusteredPointLayerStyle, 
   getUnclusteredLabelLayerStyle, 
+  selectedPointHaloLayerStyle,
+  selectedPointLayerStyle,
+  getSelectedPointLabelLayerStyle,
   getCitiesLayerStyle,
   parchmentStyle 
 } from '../mapStyles';
@@ -61,6 +64,25 @@ function MapContent() {
   const visibleEventsList = useMemo(() => {
     return visibleGeoJson.features.slice().sort((a: any, b: any) => a.properties.year - b.properties.year);
   }, [visibleGeoJson]);
+
+  const selectedEventGeoJson = useMemo(() => {
+    if (!selectedEvent) return { type: 'FeatureCollection', features: [] };
+    return {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: selectedEvent.coordinates
+          },
+          properties: {
+            ...selectedEvent.properties
+          }
+        }
+      ]
+    };
+  }, [selectedEvent]);
 
   const toggleCategory = (category: Category) => {
     setActiveCategories(prev =>
@@ -129,7 +151,7 @@ function MapContent() {
     }
 
     // Query for unclustered single point features at click location
-    if (feature.layer.id === 'unclustered-point') {
+    if (feature.layer.id === 'unclustered-point' || feature.layer.id === 'selected-point') {
       const props = feature.properties as any;
       const coords = (feature.geometry as any).coordinates as [number, number];
       setSelectedEvent({
@@ -181,6 +203,7 @@ function MapContent() {
         toggleCategory={toggleCategory}
         events={visibleEventsList}
         onEventClick={handleEventClick}
+        selectedEventId={selectedEvent?.properties.id}
       />
       <Map
         ref={mapRef}
@@ -191,7 +214,7 @@ function MapContent() {
         }}
         cursor={cursor}
         mapStyle={parchmentStyle as any}
-        interactiveLayerIds={['clusters', 'unclustered-point']}
+        interactiveLayerIds={['clusters', 'unclustered-point', 'selected-point']}
         onClick={handleMapClick}
         onMouseEnter={() => setCursor('pointer')}
         onMouseLeave={() => setCursor('auto')}
@@ -210,12 +233,42 @@ function MapContent() {
           <Layer {...getUnclusteredLabelLayerStyle(isRTL)} />
         </Source>
         <Source
+          id="selected-event-source"
+          type="geojson"
+          data={selectedEventGeoJson as any}
+        >
+          <Layer {...selectedPointHaloLayerStyle} />
+          <Layer {...selectedPointLayerStyle} />
+          <Layer {...getSelectedPointLabelLayerStyle(isRTL)} />
+        </Source>
+        <Source
           id="cities-top-source"
           type="geojson"
           data="/data/cities.geojson"
         >
           <Layer {...getCitiesLayerStyle(isRTL)} />
         </Source>
+
+        {selectedEvent && (
+          <Marker
+            key={`beacon-${selectedEvent.properties.id}`}
+            longitude={selectedEvent.coordinates[0]}
+            latitude={selectedEvent.coordinates[1]}
+            anchor="center"
+            style={{ pointerEvents: 'none' }}
+          >
+            <div className="relative flex items-center justify-center pointer-events-none">
+              {/* Outer expanding ripple ring - blinks 3 times then stops */}
+              <span className="absolute w-16 h-16 rounded-full bg-amber-500/50 animate-ping-thrice" />
+              {/* Soft glowing parchment halo - stays steady */}
+              <span className="absolute w-11 h-11 rounded-full bg-amber-400/35 border-2 border-amber-600/70 shadow-lg shadow-amber-600/40 backdrop-blur-[1px]" />
+              {/* Inner beacon ring */}
+              <span className="relative w-5 h-5 rounded-full border-2 border-amber-950 bg-amber-500 shadow-md ring-4 ring-amber-300/80 flex items-center justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-950" />
+              </span>
+            </div>
+          </Marker>
+        )}
       </Map>
 
       {selectedEvent && (

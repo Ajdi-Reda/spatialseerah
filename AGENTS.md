@@ -8,6 +8,10 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Git Workflow Rule
+
+**NEVER execute `git push` automatically.** Only run `git push` when the user explicitly asks to push (e.g., "push the changes", "push", or "git push").
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

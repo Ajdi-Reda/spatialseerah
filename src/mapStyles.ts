@@ -85,6 +85,74 @@ export function getUnclusteredLabelLayerStyle(isRTL: boolean): LayerProps {
 
 export const unclusteredLabelLayerStyle: LayerProps = getUnclusteredLabelLayerStyle(false);
 
+export const selectedPointHaloLayerStyle: LayerProps = {
+  id: 'selected-point-halo',
+  type: 'circle',
+  paint: {
+    'circle-radius': 22,
+    'circle-color': [
+      'match',
+      ['get', 'category'],
+      'battles', CategoryMap.battles.colorHex,
+      'treaties', CategoryMap.treaties.colorHex,
+      'migrations', CategoryMap.migrations.colorHex,
+      'biography', CategoryMap.biography.colorHex,
+      'preaching', CategoryMap.preaching.colorHex,
+      '#C5A059'
+    ],
+    'circle-opacity': 0.35,
+    'circle-stroke-width': 3,
+    'circle-stroke-color': '#D4AF37',
+    'circle-stroke-opacity': 0.95
+  }
+};
+
+export const selectedPointLayerStyle: LayerProps = {
+  id: 'selected-point',
+  type: 'circle',
+  paint: {
+    'circle-radius': 11,
+    'circle-stroke-width': 3,
+    'circle-stroke-color': '#1A1C20',
+    'circle-color': [
+      'match',
+      ['get', 'category'],
+      'battles', CategoryMap.battles.colorHex,
+      'treaties', CategoryMap.treaties.colorHex,
+      'migrations', CategoryMap.migrations.colorHex,
+      'biography', CategoryMap.biography.colorHex,
+      'preaching', CategoryMap.preaching.colorHex,
+      '#C5A059'
+    ]
+  }
+};
+
+export function getSelectedPointLabelLayerStyle(isRTL: boolean): LayerProps {
+  return {
+    id: 'selected-point-label',
+    type: 'symbol',
+    layout: {
+      'text-field': isRTL 
+        ? ['coalesce', ['get', 'title_ar'], ['get', 'title']] 
+        : ['get', 'title'],
+      'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+      'text-size': 14,
+      'text-anchor': isRTL ? 'right' : 'left',
+      'text-offset': isRTL ? [-1.5, 0] : [1.5, 0],
+      'text-justify': isRTL ? 'right' : 'left',
+      'text-padding': 4,
+      'text-allow-overlap': true,
+      'text-ignore-placement': true
+    },
+    paint: {
+      'text-color': '#7F1D1D',
+      'text-halo-color': '#FDFBF7',
+      'text-halo-width': 4,
+      'text-halo-blur': 0.5
+    }
+  };
+}
+
 export function getCitiesLayerStyle(isRTL: boolean): LayerProps {
   return {
     id: 'cities-layer-top',
