@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { CATEGORIES_LIST, CategoryMap, type Category } from '../constants/categories';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageToggle from './LanguageToggle';
 
 interface TimelineProps {
   currentYear: number;
@@ -18,6 +20,7 @@ export default function Timeline({
   events, 
   onEventClick 
 }: TimelineProps) {
+  const { isRTL, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
 
@@ -41,38 +44,57 @@ export default function Timeline({
   const filteredEvents = useMemo(() => {
     if (!searchQuery.trim()) return events;
     const q = searchQuery.toLowerCase();
-    return events.filter(e => 
-      e.properties.title.toLowerCase().includes(q) ||
-      e.properties.description.toLowerCase().includes(q)
-    );
+    return events.filter(e => {
+      const title = (e.properties.title || '').toLowerCase();
+      const titleAr = (e.properties.title_ar || '').toLowerCase();
+      const desc = (e.properties.description || '').toLowerCase();
+      const descAr = (e.properties.description_ar || '').toLowerCase();
+      return title.includes(q) || titleAr.includes(q) || desc.includes(q) || descAr.includes(q);
+    });
   }, [events, searchQuery]);
 
   return (
-    <div className={`fixed inset-x-3 bottom-3 sm:absolute sm:inset-auto sm:top-8 sm:left-8 sm:w-96 bg-parchment-100/95 backdrop-blur-md rounded-2xl sm:rounded-xl shadow-2xl border border-ink-900/15 p-4 sm:p-5 z-20 pointer-events-auto flex flex-col gap-3 transition-all duration-300 ${
-      isMobileExpanded 
-        ? 'h-[75vh] sm:h-[calc(100vh-4rem)] sm:max-h-[840px]' 
-        : 'max-h-[220px] sm:max-h-[840px] sm:h-[calc(100vh-4rem)]'
-    }`}>
-      {/* Mobile Handle & Header */}
-      <div className="flex-none flex items-center justify-between">
+    <div 
+      dir={isRTL ? 'rtl' : 'ltr'}
+      className={`fixed inset-x-3 bottom-3 sm:absolute sm:inset-auto sm:top-8 ${
+        isRTL ? 'sm:right-8 sm:left-auto' : 'sm:left-8 sm:right-auto'
+      } sm:w-96 bg-parchment-100/95 backdrop-blur-md rounded-2xl sm:rounded-xl shadow-2xl border border-ink-900/15 p-4 sm:p-5 z-20 pointer-events-auto flex flex-col gap-3 transition-all duration-300 ${
+        isMobileExpanded 
+          ? 'h-[75vh] sm:h-[calc(100vh-4rem)] sm:max-h-[840px]' 
+          : 'max-h-[220px] sm:max-h-[840px] sm:h-[calc(100vh-4rem)]'
+      }`}
+    >
+      {/* Header & Language Toggle */}
+      <div className="flex-none flex items-start justify-between gap-2">
         <div>
-          <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-wide text-ink-900 leading-tight drop-shadow-sm">Spatial Seerah</h1>
-          <p className="font-sans text-[11px] sm:text-xs text-ink-700 font-medium">Interactive historical timeline</p>
+          <h1 className={`font-serif text-xl sm:text-2xl font-bold tracking-wide text-ink-900 leading-tight drop-shadow-sm ${isRTL ? 'font-arabic' : ''}`}>
+            {t.appTitle}
+          </h1>
+          <p className={`font-sans text-[11px] sm:text-xs text-ink-700 font-medium ${isRTL ? 'font-arabic' : ''}`}>
+            {t.appSubtitle}
+          </p>
         </div>
-        <button
-          onClick={() => setIsMobileExpanded(!isMobileExpanded)}
-          className="sm:hidden text-xs font-bold px-3 py-1.5 rounded-full bg-ink-900 text-parchment-100 flex items-center gap-1 shadow-sm"
-          aria-label={isMobileExpanded ? "Collapse events list" : "Expand events list"}
-        >
-          <span>{isMobileExpanded ? '▼ Map View' : `▲ Events (${filteredEvents.length})`}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <button
+            onClick={() => setIsMobileExpanded(!isMobileExpanded)}
+            className="sm:hidden text-xs font-bold px-3 py-1.5 rounded-full bg-ink-900 text-parchment-100 flex items-center gap-1 shadow-sm"
+            aria-label={isMobileExpanded ? t.collapseEvents : t.expandEvents}
+          >
+            <span>{isMobileExpanded ? t.collapseEvents : `${t.expandEvents} (${filteredEvents.length})`}</span>
+          </button>
+        </div>
       </div>
 
       {/* Year Slider */}
       <section className="flex-none flex flex-col gap-1.5 bg-ink-900/5 p-2.5 sm:p-3 rounded-lg border border-ink-900/10">
         <div className="font-serif font-bold text-ink-900 text-xs sm:text-sm flex justify-between items-center">
-          <label htmlFor="timeline-year-slider" className="cursor-pointer">Timeline Filter</label>
-          <span className="text-lg sm:text-xl text-marker-treaties tabular-nums font-sans font-extrabold">{currentYear} CE</span>
+          <label htmlFor="timeline-year-slider" className={`cursor-pointer ${isRTL ? 'font-arabic' : ''}`}>
+            {t.timelineFilter}
+          </label>
+          <span className="text-lg sm:text-xl text-marker-treaties tabular-nums font-sans font-extrabold">
+            {currentYear} {t.yearSuffix}
+          </span>
         </div>
         <input 
           id="timeline-year-slider"
@@ -80,26 +102,33 @@ export default function Timeline({
           min={610} 
           max={632} 
           value={currentYear} 
-          aria-label="Filter timeline by year (610 to 632 CE)"
+          aria-label={`Filter timeline by year (610 to 632 ${t.yearSuffix})`}
           onChange={(e) => setCurrentYear(Number(e.target.value))}
           className="w-full accent-ink-900 cursor-grab active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900 rounded"
         />
         <div className="flex justify-between items-center text-[10px] sm:text-xs font-bold text-ink-700 font-sans">
-          <span>610 CE (Revelation)</span>
-          <span className="font-mono text-[10px] text-ink-700/80 bg-ink-900/10 px-1.5 py-0.5 rounded border border-ink-900/10 hidden sm:inline" title="Use Arrow Left or Arrow Right on keyboard to change year">← / → keys</span>
-          <span>632 CE (Farewell)</span>
+          <span className={isRTL ? 'font-arabic' : ''}>{t.revelationLabel}</span>
+          <span className="font-mono text-[10px] text-ink-700/80 bg-ink-900/10 px-1.5 py-0.5 rounded border border-ink-900/10 hidden sm:inline" title="Keyboard navigation: Left / Right arrows">
+            {t.keyboardShortcutTip}
+          </span>
+          <span className={isRTL ? 'font-arabic' : ''}>{t.farewellLabel}</span>
         </div>
       </section>
 
       {/* Category Pills */}
       <section className="flex-none flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <h2 className="font-serif font-bold text-ink-900 text-[11px] sm:text-xs tracking-wider uppercase">Categories</h2>
-          <span className="text-[10px] sm:text-xs text-ink-700 font-sans">{activeCategories.length}/{CATEGORIES_LIST.length} active</span>
+          <h2 className={`font-serif font-bold text-ink-900 text-[11px] sm:text-xs tracking-wider uppercase ${isRTL ? 'font-arabic' : ''}`}>
+            {t.categoriesTitle}
+          </h2>
+          <span className="text-[10px] sm:text-xs text-ink-700 font-sans">
+            {activeCategories.length}/{CATEGORIES_LIST.length} {t.activeCount}
+          </span>
         </div>
         <div className="flex flex-wrap gap-1 sm:gap-1.5" role="group" aria-label="Category filters">
           {CATEGORIES_LIST.map(cat => {
             const isActive = activeCategories.includes(cat.id);
+            const label = isRTL ? cat.label_ar : cat.label;
             return (
               <button
                 key={cat.id}
@@ -112,40 +141,46 @@ export default function Timeline({
                 }`}
               >
                 <div className={`w-2 h-2 rounded-full ${cat.colorClass}`} />
-                <span>{cat.label}</span>
+                <span className={isRTL ? 'font-arabic' : ''}>{label}</span>
               </button>
             );
           })}
         </div>
       </section>
 
-      {/* Events List (Collapsible on Mobile, Expanded on Desktop) */}
+      {/* Events List */}
       <section className={`flex-1 min-h-0 flex-col gap-2 border-t border-ink-900/10 pt-2 sm:pt-3 ${
         isMobileExpanded ? 'flex' : 'hidden sm:flex'
       }`}>
         <div className="flex items-center justify-between flex-none">
           <div>
-            <h2 className="font-serif font-bold text-ink-900 text-xs sm:text-sm">Events ({filteredEvents.length})</h2>
-            <p className="text-[10px] sm:text-[11px] text-ink-700 font-sans">Click card to pan map camera</p>
+            <h2 className={`font-serif font-bold text-ink-900 text-xs sm:text-sm ${isRTL ? 'font-arabic' : ''}`}>
+              {t.eventsTitle} ({filteredEvents.length})
+            </h2>
+            <p className={`text-[10px] sm:text-[11px] text-ink-700 font-sans ${isRTL ? 'font-arabic' : ''}`}>
+              {t.clickCardTip}
+            </p>
           </div>
-          <span className="text-xs text-ink-700 font-sans hidden sm:inline">610–{currentYear} CE</span>
+          <span className="text-xs text-ink-700 font-sans hidden sm:inline tabular-nums">
+            610–{currentYear} {t.yearSuffix}
+          </span>
         </div>
 
-        {/* Search Query Input */}
+        {/* Search Input */}
         <div className="relative flex-none">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search events (e.g., Badr, Hudaibiyah)..."
-            aria-label="Search events by title or description"
-            className="w-full text-xs px-3 py-1.5 sm:py-2 pr-7 rounded-lg bg-parchment-100 border border-ink-900/15 text-ink-900 placeholder-ink-700/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900 shadow-inner"
+            placeholder={t.searchPlaceholder}
+            aria-label="Search events"
+            className={`w-full text-xs px-3 py-1.5 sm:py-2 ${isRTL ? 'pl-7 pr-3' : 'pr-7 pl-3'} rounded-lg bg-parchment-100 border border-ink-900/15 text-ink-900 placeholder-ink-700/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900 shadow-inner ${isRTL ? 'font-arabic' : ''}`}
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              aria-label="Clear search query"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-700 hover:text-ink-900 text-xs p-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ink-900"
+              aria-label={t.clearSearch}
+              className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 text-ink-700 hover:text-ink-900 text-xs p-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ink-900`}
             >
               ✕
             </button>
@@ -154,14 +189,17 @@ export default function Timeline({
 
         <div className="flex-1 min-h-0 overflow-y-auto pr-1 pb-2 flex flex-col gap-2 styled-scrollbar">
           {filteredEvents.length === 0 ? (
-            <p className="text-xs text-ink-700 italic p-4 text-center">
-              {searchQuery ? `No events match "${searchQuery}".` : 'No events match the active filters.'}
+            <p className={`text-xs text-ink-700 italic p-4 text-center ${isRTL ? 'font-arabic' : ''}`}>
+              {searchQuery ? t.noEventsMatch.replace('{query}', searchQuery) : t.noEventsFilter}
             </p>
           ) : (
             filteredEvents.map(event => {
               const catInfo = CategoryMap[event.properties.category as Category];
               const catColorClass = catInfo ? catInfo.colorClass : 'bg-ink-700';
-              const catLabel = catInfo ? catInfo.label : event.properties.category;
+              const catLabel = catInfo ? (isRTL ? catInfo.label_ar : catInfo.label) : event.properties.category;
+              const title = isRTL ? (event.properties.title_ar || event.properties.title) : event.properties.title;
+              const description = isRTL ? (event.properties.description_ar || event.properties.description) : event.properties.description;
+
               return (
                 <div 
                   key={event.properties.id}
@@ -169,7 +207,6 @@ export default function Timeline({
                   tabIndex={0}
                   onClick={() => {
                     onEventClick(event.geometry.coordinates[0], event.geometry.coordinates[1], event.properties);
-                    // On mobile, collapse event feed after selecting so detail drawer & map are visible
                     if (window.innerWidth < 640) {
                       setIsMobileExpanded(false);
                     }
@@ -183,17 +220,25 @@ export default function Timeline({
                       }
                     }
                   }}
-                  className="text-left p-2.5 sm:p-3 rounded-lg border border-ink-900/10 hover:border-ink-900/30 hover:bg-ink-900/5 transition-all group shadow-sm bg-parchment-100/90 flex flex-col gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
+                  className="text-start p-2.5 sm:p-3 rounded-lg border border-ink-900/10 hover:border-ink-900/30 hover:bg-ink-900/5 transition-all group shadow-sm bg-parchment-100/90 flex flex-col gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <div className={`w-2 h-2 rounded-full ${catColorClass}`} />
-                      <span className="text-[10px] sm:text-[11px] font-bold text-ink-700 uppercase tracking-wider">{catLabel}</span>
+                      <span className={`text-[10px] sm:text-[11px] font-bold text-ink-700 uppercase tracking-wider ${isRTL ? 'font-arabic' : ''}`}>
+                        {catLabel}
+                      </span>
                     </div>
-                    <span className="text-xs font-bold text-marker-treaties font-mono">{event.properties.year} CE</span>
+                    <span className="text-xs font-bold text-marker-treaties font-mono tabular-nums">
+                      {event.properties.year} {t.yearSuffix}
+                    </span>
                   </div>
-                  <h3 className="font-serif font-bold text-ink-900 text-xs sm:text-sm group-hover:text-marker-treaties transition-colors leading-snug">{event.properties.title}</h3>
-                  <p className="text-[11px] sm:text-xs text-ink-700 line-clamp-2 leading-relaxed">{event.properties.description}</p>
+                  <h3 className={`font-serif font-bold text-ink-900 text-xs sm:text-sm group-hover:text-marker-treaties transition-colors leading-snug ${isRTL ? 'font-arabic text-base' : ''}`}>
+                    {title}
+                  </h3>
+                  <p className={`text-[11px] sm:text-xs text-ink-700 line-clamp-2 leading-relaxed ${isRTL ? 'font-arabic text-sm' : ''}`}>
+                    {description}
+                  </p>
                 </div>
               );
             })

@@ -5,6 +5,7 @@
       "type": "Feature",
       "properties": {
         "name": "Makkah",
+        "name_ar": "مكة المكرمة",
         "type": "city"
       },
       "geometry": {
@@ -16,6 +17,7 @@
       "type": "Feature",
       "properties": {
         "name": "Madinah",
+        "name_ar": "المدينة المنورة",
         "type": "city"
       },
       "geometry": {
@@ -27,6 +29,7 @@
       "type": "Feature",
       "properties": {
         "name": "Ta'if",
+        "name_ar": "الطائف",
         "type": "city"
       },
       "geometry": {
@@ -38,6 +41,7 @@
       "type": "Feature",
       "properties": {
         "name": "Khaybar",
+        "name_ar": "خيبر",
         "type": "city"
       },
       "geometry": {

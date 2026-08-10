@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400..700&display=swap');
 @import "tailwindcss";
 @import "@fontsource/merriweather";
 @import "@fontsource/inter";
@@ -5,6 +6,7 @@
 @theme {
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'Merriweather', serif;
+  --font-arabic: 'Amiri', 'Noto Naskh Arabic', serif;
 
   --color-parchment-100: #F7F4EB;
   --color-parchment-200: #E8E2D2;
@@ -22,4 +24,28 @@
   body {
     @apply font-sans bg-parchment-100 text-ink-900;
   }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+}
+
+.font-arabic {
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+}
+
+/* Custom scrollbar styles */
+.styled-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.styled-scrollbar::-webkit-scrollbar-track {
+  background: rgba(26, 28, 32, 0.05);
+  border-radius: 4px;
+}
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(26, 28, 32, 0.2);
+  border-radius: 4px;
+}
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 28, 32, 0.4);
 }

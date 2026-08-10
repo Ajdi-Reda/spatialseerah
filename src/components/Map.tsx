@@ -2,27 +2,23 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Map, { Source, Layer, type MapRef } from 'react-map-gl/maplibre';
 import Timeline from './Timeline';
 import EventDetailDrawer, { type SelectedEventData } from './EventDetailDrawer';
+import { LanguageProvider, useLanguage } from '../context/LanguageContext';
 import { 
   clusterLayerStyle, 
   clusterCountLayerStyle, 
   unclusteredPointLayerStyle, 
-  unclusteredLabelLayerStyle, 
-  citiesLayerStyle,
+  getUnclusteredLabelLayerStyle, 
+  getCitiesLayerStyle,
   parchmentStyle 
 } from '../mapStyles';
-import { setWorkerUrl } from 'maplibre-gl';
+import { setRTLTextPlugin, getRTLTextPluginStatus, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+import { type Category } from '../constants/categories';
 
-if (typeof window !== 'undefined') {
-  setWorkerUrl(workerUrl);
-}
-
-type Category = 'battles' | 'treaties' | 'migrations' | 'biography' | 'preaching';
-
-export default function SeerahMap() {
+function MapContent() {
+  const { isRTL } = useLanguage();
   const mapRef = useRef<MapRef>(null);
-  const [isClient, setIsClient] = useState(false);
   const [currentYear, setCurrentYear] = useState(632);
   const [activeCategories, setActiveCategories] = useState<Category[]>([
     'battles', 'treaties', 'migrations', 'biography', 'preaching'
@@ -32,7 +28,19 @@ export default function SeerahMap() {
   const [selectedEvent, setSelectedEvent] = useState<SelectedEventData | null>(null);
 
   useEffect(() => {
-    setIsClient(true);
+    if (typeof window !== 'undefined') {
+      setWorkerUrl(workerUrl);
+      if (getRTLTextPluginStatus() === 'unavailable') {
+        try {
+          setRTLTextPlugin('/mapbox-gl-rtl-text.js', true);
+        } catch (e) {
+          console.error('Error loading MapLibre RTL text plugin:', e);
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     fetch('/data/seerah_timeline_polished.geojson')
       .then(res => res.json())
       .then(data => setEventsData(data));
@@ -66,15 +74,21 @@ export default function SeerahMap() {
         properties: {
           id: properties.id,
           title: properties.title,
+          title_ar: properties.title_ar,
           year: Number(properties.year),
           category: properties.category as Category,
-          description: properties.description
+          description: properties.description,
+          description_ar: properties.description_ar
         },
         coordinates: [lng, lat]
       });
     }
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-    const padding = isMobile ? { left: 0, top: 0, bottom: 220, right: 0 } : { left: 340, top: 0, bottom: 0, right: 0 };
+    const padding = isMobile 
+      ? { left: 0, top: 0, bottom: 220, right: 0 } 
+      : isRTL 
+        ? { left: 0, top: 0, bottom: 0, right: 340 } 
+        : { left: 340, top: 0, bottom: 0, right: 0 };
 
     mapRef.current?.flyTo({
       center: [lng, lat],
@@ -122,15 +136,21 @@ export default function SeerahMap() {
         properties: {
           id: props.id,
           title: props.title,
+          title_ar: props.title_ar,
           year: Number(props.year),
           category: props.category as Category,
-          description: props.description
+          description: props.description,
+          description_ar: props.description_ar
         },
         coordinates: coords
       });
 
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-      const padding = isMobile ? { left: 0, top: 0, bottom: 220, right: 0 } : { left: 340, top: 0, bottom: 0, right: 0 };
+      const padding = isMobile 
+        ? { left: 0, top: 0, bottom: 220, right: 0 } 
+        : isRTL 
+          ? { left: 0, top: 0, bottom: 0, right: 340 } 
+          : { left: 340, top: 0, bottom: 0, right: 0 };
 
       map.flyTo({
         center: coords,
@@ -144,8 +164,6 @@ export default function SeerahMap() {
     // Clicked outside markers
     setSelectedEvent(null);
   };
-
-  if (!isClient) return <div className="absolute inset-0 w-full h-full bg-parchment-200 animate-pulse" />;
 
   return (
     <div className="absolute inset-0 w-full h-full z-0 font-sans bg-parchment-200">
@@ -189,14 +207,14 @@ export default function SeerahMap() {
           <Layer {...clusterLayerStyle} />
           <Layer {...clusterCountLayerStyle} />
           <Layer {...unclusteredPointLayerStyle} />
-          <Layer {...unclusteredLabelLayerStyle} />
+          <Layer {...getUnclusteredLabelLayerStyle(isRTL)} />
         </Source>
         <Source
           id="cities-top-source"
           type="geojson"
           data="/data/cities.geojson"
         >
-          <Layer {...citiesLayerStyle} />
+          <Layer {...getCitiesLayerStyle(isRTL)} />
         </Source>
       </Map>
 
@@ -207,5 +225,21 @@ export default function SeerahMap() {
         />
       )}
     </div>
+  );
+}
+
+export default function SeerahMap() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return <div className="absolute inset-0 w-full h-full bg-parchment-200 animate-pulse" />;
+
+  return (
+    <LanguageProvider>
+      <MapContent />
+    </LanguageProvider>
   );
 }

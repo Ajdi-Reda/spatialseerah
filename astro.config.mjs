@@ -13,10 +13,7 @@ export default defineConfig({
       target: 'es2022'
     },
     optimizeDeps: {
-      exclude: ['maplibre-gl']
-    },
-    ssr: {
-      noExternal: ['maplibre-gl']
+      include: ['maplibre-gl', 'react-map-gl/maplibre']
     }
   }
 });

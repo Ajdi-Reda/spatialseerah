@@ -56,60 +56,72 @@ export const unclusteredPointLayerStyle: LayerProps = {
   }
 };
 
-export const unclusteredLabelLayerStyle: LayerProps = {
-  id: 'unclustered-label',
-  type: 'symbol',
-  filter: ['!', ['has', 'point_count']],
-  layout: {
-    'text-field': ['get', 'title'],
-    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-    'text-size': 12,
-    'text-anchor': 'left',
-    'text-offset': [1.2, 0],
-    'text-justify': 'left',
-    'text-padding': 6,
-    'text-allow-overlap': false,
-    'text-optional': true
-  },
-  paint: {
-    'text-color': '#1A1C20',
-    'text-halo-color': '#E8E2D2',
-    'text-halo-width': 3,
-    'text-halo-blur': 0.5
-  }
-};
+export function getUnclusteredLabelLayerStyle(isRTL: boolean): LayerProps {
+  return {
+    id: 'unclustered-label',
+    type: 'symbol',
+    filter: ['!', ['has', 'point_count']],
+    layout: {
+      'text-field': isRTL 
+        ? ['coalesce', ['get', 'title_ar'], ['get', 'title']] 
+        : ['get', 'title'],
+      'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+      'text-size': 12,
+      'text-anchor': isRTL ? 'right' : 'left',
+      'text-offset': isRTL ? [-1.2, 0] : [1.2, 0],
+      'text-justify': isRTL ? 'right' : 'left',
+      'text-padding': 6,
+      'text-allow-overlap': false,
+      'text-optional': true
+    },
+    paint: {
+      'text-color': '#1A1C20',
+      'text-halo-color': '#E8E2D2',
+      'text-halo-width': 3,
+      'text-halo-blur': 0.5
+    }
+  };
+}
 
-export const citiesLayerStyle: LayerProps = {
-  id: 'cities-layer-top',
-  type: 'symbol',
-  layout: {
-    'text-field': ['get', 'name'],
-    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-    'text-size': 13,
-    'text-transform': 'uppercase',
-    'text-letter-spacing': 0.15,
-    'text-anchor': [
-      'match', ['get', 'name'],
-      'Makkah', 'right',
-      'Madinah', 'left',
-      'top'
-    ] as any,
-    'text-offset': [
-      'match', ['get', 'name'],
-      'Makkah', ['literal', [-2.5, 0]],
-      'Madinah', ['literal', [2.5, 0]],
-      ['literal', [0, 1.8]]
-    ] as any,
-    'text-allow-overlap': true,
-    'text-ignore-placement': true
-  },
-  paint: {
-    'text-color': '#2C1E16',
-    'text-halo-color': '#E8E2D2',
-    'text-halo-width': 4,
-    'text-halo-blur': 0.5
-  }
-};
+export const unclusteredLabelLayerStyle: LayerProps = getUnclusteredLabelLayerStyle(false);
+
+export function getCitiesLayerStyle(isRTL: boolean): LayerProps {
+  return {
+    id: 'cities-layer-top',
+    type: 'symbol',
+    layout: {
+      'text-field': isRTL 
+        ? ['coalesce', ['get', 'name_ar'], ['get', 'name']] 
+        : ['get', 'name'],
+      'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+      'text-size': 13,
+      'text-transform': isRTL ? 'none' : 'uppercase',
+      'text-letter-spacing': isRTL ? 0 : 0.15,
+      'text-anchor': [
+        'match', ['get', 'name'],
+        'Makkah', isRTL ? 'left' : 'right',
+        'Madinah', isRTL ? 'right' : 'left',
+        'top'
+      ] as any,
+      'text-offset': [
+        'match', ['get', 'name'],
+        'Makkah', ['literal', [isRTL ? 2.5 : -2.5, 0]],
+        'Madinah', ['literal', [isRTL ? -2.5 : 2.5, 0]],
+        ['literal', [0, 1.8]]
+      ] as any,
+      'text-allow-overlap': true,
+      'text-ignore-placement': true
+    },
+    paint: {
+      'text-color': '#2C1E16',
+      'text-halo-color': '#E8E2D2',
+      'text-halo-width': 4,
+      'text-halo-blur': 0.5
+    }
+  };
+}
+
+export const citiesLayerStyle: LayerProps = getCitiesLayerStyle(false);
 
 export const parchmentStyle = {
   version: 8,
